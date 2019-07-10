@@ -1,0 +1,9 @@
+how to build sophus
+
+git clone https://github.com/strasdat/Sophus.git
+cd Sophus
+git checkout b474f05 
+mkdir build
+cd build
+cmake ..
+make

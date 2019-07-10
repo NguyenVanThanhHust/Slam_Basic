@@ -1,0 +1,3 @@
+/media/thanh/New Volume/Project/Slam_Basic/chapter_5/rgbd_image/CMakeFiles/rebuild_cache.dir
+/media/thanh/New Volume/Project/Slam_Basic/chapter_5/rgbd_image/CMakeFiles/edit_cache.dir
+/media/thanh/New Volume/Project/Slam_Basic/chapter_5/rgbd_image/CMakeFiles/joinMap.dir
