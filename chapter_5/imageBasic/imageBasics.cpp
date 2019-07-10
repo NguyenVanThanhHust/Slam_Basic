@@ -6,11 +6,12 @@ using namespace std;
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+using namespace cv;
 int main(int argc, char **argv)
 {
     cv::Mat image;
     image = cv::imread(argv[1]);
-    if(image.data == nullptr)
+    if( !image.data)
     {
         cerr<<"This image doesn't exist."<<endl;
         return 0;
@@ -19,14 +20,14 @@ int main(int argc, char **argv)
     cv::waitKey(0);
     
     // Determine type of image
-    if (image.type() != CV_8CU1 && image.type() != CV_8UC3)
+    if (image.type() != CV_8UC1 && image.type() != CV_8UC3)
     {
         cout<<"This is not grayscale or color image"<<endl;
     }
     
     // Traversing the image
     chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
-    for(size_t y = 0; i <image.rows; y++)
+    for(size_t y = 0; y <image.rows; y++)
     {
         // Get the line pointer with cv::Mat::ptr
         // row_ptr is the head pointer of the yth line

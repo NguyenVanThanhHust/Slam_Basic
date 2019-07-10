@@ -43,6 +43,6 @@ int main()
     cv::imshow("distorted", image);
     cv::imshow("undistorted", image_undistort);
     cv::imwrite("undistorted_image.jpg", image_undistort);
-    cv::waitKey();
+    cv::waitKey(0);
     return 0;
 }
