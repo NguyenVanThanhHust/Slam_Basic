@@ -12,6 +12,8 @@ set(CMAKE_CXX_COMPILER_ID "GNU")
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/home/thanh/Sophus"
   "/usr/local/include/eigen3"
+  "/opt/ros/kinetic/include/opencv-3.3.1-dev"
+  "/opt/ros/kinetic/include/opencv-3.3.1-dev/opencv"
   "/home/thanh/Pangolin/include"
   "/home/thanh/Pangolin/build/src/include"
   )

@@ -19,11 +19,11 @@ int main()
     
     ifstream fin("./pose.txt");
     if (!fin) {
-        cerr << "请在有pose.txt的目录下运行此程序" << endl;
+        cerr << "File pose.txt doesn't exists" << endl;
         return 1;
-    }
+    };
     
-    for(int i = 0; i < 5, i++)
+    for(int i = 0; i < 5; i++)
     {
         boost::format fmt("./%s/%d.%s");
         colorImgs.push_back(cv::imread((fmt % "color" % (i + 1) % "png").str()));
@@ -51,6 +51,7 @@ int main()
         cout<<"convert image: "<<(i+1)<<endl;
         cv::Mat color = colorImgs[i];
         cv::Mat depth = depthImgs[i];
+        Sophus::SE3d T = poses[i];
         for (int v = 0; v < color.rows; v++)
         {
             for (int u = 0; u < color.cols; u++)
