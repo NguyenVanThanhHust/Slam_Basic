@@ -8,8 +8,8 @@
 using namespace std;
 using namespace Eigen;
 
-string left_file = "./left.png"
-string right_file = "./right.png"
+string left_file = "./left.png";
+string right_file = "./right.png";
 
 // Draw a picture in pangoline
 void showPointCloud(const vector<Eigen::Vector4d, Eigen::aligned_allocator<Eigen::Vector4d>> &pointCloud);
@@ -34,7 +34,7 @@ int main()
     disparity_sgbm.convertTo(disparity, CV_32F, 1.0 / 16.0f);
     
     // Generate a cloud pointCloud
-    ector<Eigen::Vector4d, Eigen::aligned_allocator<Eigen::Vector4d>> pointCloud;
+    vector<Eigen::Vector4d, Eigen::aligned_allocator<Eigen::Vector4d>> pointcloud;
     for(int v= 0; v < left.rows; v++)
     {
         for(int u = 0; u < left.cols; u++)
@@ -59,9 +59,9 @@ int main()
     return 0;
 }
 
-void showPointCloud(const vector<Eigen::Vector4d, Eigen::aligned_allocator<Eigen::Vector4d>> &pointCloud)
+void showPointCloud(const vector<Eigen::Vector4d, Eigen::aligned_allocator<Eigen::Vector4d>> &pointcloud)
 {
-    if (!pointCloud.empty())
+    if (!pointcloud.empty())
     {
         cout<<"Point cloud is empty!"<<endl;
     }
@@ -71,6 +71,15 @@ void showPointCloud(const vector<Eigen::Vector4d, Eigen::aligned_allocator<Eigen
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
+    pangolin::OpenGlRenderState s_cam(
+        pangolin::ProjectionMatrix(1024, 768, 500, 500, 512, 389, 0.1, 1000),
+        pangolin::ModelViewLookAt(0, -0.1, -1.8, 0, 0, 0, 0.0, -1.0, 0.0)
+    );
+
+    pangolin::View &d_cam = pangolin::CreateDisplay()
+        .SetBounds(0.0, 1.0, pangolin::Attach::Pix(175), 1.0, -1024.0f / 768.0f)
+        .SetHandler(new pangolin::Handler3D(s_cam));
+
     while (pangolin::ShouldQuit() == false) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
