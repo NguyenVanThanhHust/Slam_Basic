@@ -13,3 +13,6 @@ sudo add-apt-repository ppa:jmaye/ethz
 sudo apt-get update
 
 sudo apt-get install libsuitesparse-dev
+
+http://ceres-solver.org/installation.html
+
