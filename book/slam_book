@@ -192,3 +192,119 @@ Mapping refers to the process of building a map. A map (see figure [map]) is a d
 For home sweeping robots, since they mainly move on ground, a two-dimensional map with marks for open areas and obstacles would be sufficient for navigation to a certain extend. And for a camera, we need at least a three-dimensional map for its 6 degrees of freedom movement. Sometimes, we want a beautiful reconstruction result, not just a set of points, but also with texture of triangular facets. At other times, we do not care about the map, just need to know things like "point A and point B are connect, while point B and point C are not". Sometimes maps may not even be needed, or they are available from others, for example, driving vehicles can often obtain local maps plotted by others.
 
 For maps, we have so many ideas and demands. So compared to the previously mentioned visual odometer, loop closure detection and back-end optimization, map building does not refer to a fixed form or algorithm. A collection of spatial points can be called a map, a beautiful 3D model is also a map, so is a picture of a city, a village, railways, and rivers. The form of the map depends on the application of SLAM. In general, they can be divided into to categories: **metric map** and **topological map**.
+
+
+##### Metric Map
+
+Metric maps emphasize the exact locations of objects in maps, are usually classified as either sparse or dense. Sparse metric maps abstract a scene into certain form, and do not express all the objects. For example, we can construct a sparse map by selecting representative landmarks such as road signs, and ignore other parts. In contrast, dense metric maps focus on modeling all the things that are seen. For positioning, sparse map is enough, while for navigation, a dense map is usually needed (otherwise we may hit a wall between two road signs). A dense map usually consists of a number of small pieces at a certain resolution. It can be small grids for 2D metric maps, or small voxels for 3D. Usually, a small piece may have three states to express whether an object is there: occupied, idle, and unknown. When a spatial location is queried, the map can give information about whether the location can be passed through. This type of maps can be used for a variety of navigation algorithms, such as A\*, D\* (footnote: [https://en.wikipedia.org/wiki/A*_search_algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm)), etc., and thus attracts the attention of researchers in robotics field. But we can also see that this map needs to store the state of each grid, and thus being storage expensive. Even worse, in most cases, a large portion of the map details is useless. On the other hand, there is sometimes a consistency issue with large-scale metric maps. A little bit of steering error may cause the walls of two rooms to overlap and thus making the map ineffective.
+
+
+##### Topological Map
+
+Compared to the accurate metric maps, topological maps emphasize the relationships among map elements. A topological map is a graph composed of nodes and edges, only considering the connectivity between nodes. For instance, we only care about that point A and point B are connected, regardless how we could travel from point A to point B. It relaxes the requirements on precise locations of a map by removing map details, and is therefore a more compact expression. However, topological maps are not good at representing maps with complex structures. Questions such as how to split a map to form nodes and edges, and how to use a topological map for navigation and path planning, are still open problems to be studied.
+
+### Mathematical Formulation of SLAM Problems
+
+Through the previous introduction, readers should have gained an intuitive understanding of the modular composition of a SLAM system and the main functionality of each module. However, we cannot write runable programs only based on intuitive impressions. We want to rise it to a rational and rigorous level, that is, using mathematical language to formulate a SLAM process. We will be using variables and formulas, but please rest assured that we will try our best to keep it clear enough.
+
+This is a simple linear relationship. However, not all of the sensors can directly measure the displacement and angle changes, so there are other forms of more complex equations of motion, then we may need to carry out dynamic analysis. On the observation equation, for example, a small radish carrying a two-dimensional laser sensor. We know that when a laser sensor observes a 2D punctuation, two quantities can be measured: the distance between the road sign and the radish body is $ r $ and the angle $$ \ phi $$. The observation data is $ \ bm {y} = [p_x, p_y] ^ \ mathrm {T} $ (for the sake of simplicity, omitting the subscript), the observation data is $ \ bm {z} = [r, \ phi] ^ \ Mathrm {T} $, then the observation equation is as follows:
+
+Finally, we add a bias to the evidence in an image category. The purpose of adding a bias is to add some information that is independent of the input. So the image category's evidence is
+
+$$ evidence\_{i}=\sum \_{j}W\_{ij}x\_{j}+b\_{i} $$
+
+Where \\( W\_i \\) and \\( b\_i \\) are the weights and offsets of the category \\( i \\) respectively.
+
+\newpage
+{
+\small
+\begin{table}[!h]
+\caption{Common open source SLAM solution}
+\label{table:opensource-slam}
+\begin{tabu}{@{}c|c|X@{}}
+\toprule
+Solution Name & Sensor Form & Address \\
+\midrule
+MonoSLAM & Monocular & \url{https://github.com/hanmekim/SceneLib2} \\
+PTAM & Monocular & \url{http://www.robots.ox.ac.uk/~gk/PTAM/} \\
+ORB-SLAM & Monocular Master & \url{http://webdiis.unizar.es/~raulmur/orbslam/} \\
+LSD-SLAM & Monocular Master & \url{http://vision.in.tum.de/research/vslam/lsdslam} \smallskip \\
+SVO & Monocular & \url{https://github.com/uzh-rpg/rpg_svo} \\
+DTAM & RGB-D & \url{https://github.com/anuranbaka/OpenDTAM} \\
+DVO & RGB-D & \url{https://github.com/tum-vision/dvo_slam} \\
+DSO & Monocular & \url{https://github.com/JakobEngel/dso} \\
+RTAB-MAP & Binocular/RGB-D & \url{https://github.com/introlab/rtabmap} \\
+RGBD-SLAM-V2 & RGB-D & \url{https://github.com/felixendres/rgbdslam_v2} \\
+Elastic Fusion & RGB-D & \url{https://github.com/mp3guy/ElasticFusion} \\
+Hector SLAM & Laser & \url{http://wiki.ros.org/hector_slam} \\
+GMapping & Laser & \url{http://wiki.ros.org/gmapping} \\
+OKVIS & Multihead + IMU & \url{https://github.com/ethz-asl/okvis} \\
+ROVIO & Monocular + IMU & \url{https://github.com/ethz-asl/rovio} \\
+\bottomrule
+\end{tabu}
+\end{table}
+}
+
+
+\smallskip
+\subsection{MonoSLAM}
+Speaking of visual SLAM, many researchers first thought of A. J. Davison's monocular SLAM work \textsuperscript{\cite{Davison2007, Davison2003}}. Professor Davison is a pioneer in the field of visual SLAM research. The MonoSLAM he proposed in 2007 is the first real-time monocular vision SLAM system \textsuperscript{\cite{Davison2007}}, which is considered to be the birthplace of many jobs\footnote{this It is a continuation of his doctor's work. He is also working on miniaturization and low power of SLAM. }. MonoSLAM uses extended Kalman filtering as the back end to track very sparse feature points at the front end. Since EKF occupies a dominant position in the early SLAM, MonoSLAM is also based on the EKF, updating its mean and covariance with the current state of the camera and all landmark points as state quantities.
+
+\autoref{fig:mono-slam}~ shows the situation when MonoSLAM is running. It can be seen that the monocular camera tracks very sparse feature points in one image (and uses active tracking techniques). In EKF, the position of each feature point obeys a Gaussian distribution, so we can express its mean and uncertainty in the form of an ellipsoid. In the right half of the figure, we can find some small balls that are distributed in space. The longer they appear in a certain direction, the more uncertain the position in that direction. We can imagine that if a feature point converges, we should be able to see it from a very long ellipsoid (very uncertain in the direction of the camera $Z$) and finally become a small dot.
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[width=1.0\textwidth]{past-and-future/mono-slam.pdf}
+\caption{Runtime screenshot of MonoSLAM. Left: Tracks the representation of feature points in the image; Right: Represents the feature points in 3D space. }
+\label{fig:mono-slam}
+\end{figure}
+
+This approach seems to have many drawbacks today, but it was already a milestone at the time, because the visual SLAM system before this basically could not be run online, only the robot carried the camera to collect data, and then positioned offline. And building a picture. Advances in computer performance, as well as processing images in a sparse manner, add up to make a SLAM system run online. From a modern point of view, MonoSLAM has such a narrow application scenario, limited number of road signs, and sparse feature points are very easy to lose, and its development has stopped, replaced by more advanced theory and programming tools. However, this does not hinder our understanding and respect for the work of our predecessors.
+
+
+\subsection{PTAM}
+
+In 2007, Klein et al. proposed PTAM (Parallel Tracking and Mapping)\textsuperscript{\cite{Klein2007}}, which is also an important event in the development of visual SLAM. The significance of PTAM lies in the following two points:
+\clearpage
+\begin{enumerate}
+\item PTAM proposes and implements parallelization of the tracking and mapping process. We now know that the tracking part needs to respond to the image data in real time, and the optimization of the map does not need to be calculated in real time. Backend optimization can be done slowly in the background, and then thread synchronization when necessary. This is the first time in the visual SLAM to distinguish the concept of the front and rear, leading the design of many visual SLAM systems (most of the SLAM we see now are divided into front and rear).
+\item PTAM is the first to use nonlinear optimization instead of using a traditional filter as the backend. It introduces a keyframe mechanism: instead of having to process each image in detail, we string together several key images and optimize their trajectories and maps. Most of the early SLAMs used EKF filters or their variants, as well as particle filters; after PTAM, visual SLAM research gradually turned to the back end dominated by nonlinear optimization. Since people didn't realize the sparseness of back-end optimization before, they felt that the optimized backend could not handle such large-scale data in real time, and PTAM was a significant counterexample.
+
+
+\hspace{2em}PTAM is also an augmented reality software that demonstrates cool AR effects (as shown by \autoref{fig:ptam}). Based on the camera pose estimated by PTAM, we can place virtual objects on a virtual plane that looks just like in a real scene.
+\end{enumerate}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=1.0\textwidth]{past-and-future/ptam}
+\caption{PTAM demo screenshot. It can provide real-time positioning and mapping, as well as superimposing virtual objects on a virtual plane. }
+\label{fig:ptam}
+\end{figure}
+
+\clearpage
+However, from a modern perspective, PTAM is one of the early SLAM jobs combined with AR. Similar to many early work, there are obvious flaws: small scenes, easy tracking, and so on. These were revised in subsequent scenarios.
+
+\subsection{ORB-SLAM}
+
+After introducing several scenarios in history, let's look at some modern SLAM systems. ORB-SLAM is a very famous one of PTAM's successors \textsuperscript{\cite{Mur-Artal2015}} (see \autoref{fig:orb-slam}). It was proposed in 2015 as one of the most complete and very easy to use systems in modern SLAM systems (if not the most complete and easy to use). ORB-SLAM represents a peak of the mainstream feature point SLAM. Compared to previous work, ORB-SLAM has the following distinct advantages:
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=1.0\textwidth]{past-and-future/orb-slam}
+\caption{ORB-SLAM runs a screenshot. The left side is the image and the tracked feature points, and the right side is the camera track and the modeled feature point map. Below is its iconic three-threaded structure. }
+\label{fig:orb-slam}
+\end{figure}
+
+
+\begin{enumerate}
+\item supports three modes: monocular, binocular, and RGB-D. This makes it possible to test it on the ORB-SLAM no matter which common sensor we get, it has good versatility.
+\item The entire system is calculated around the ORB features, including the ORB dictionary of visual odometers and loopback detection. It reflects the ORB feature is a compromise between the excellent efficiency and accuracy of the current computing platform. The ORB is not as time-consuming as SIFT or SURF, and can be calculated in real time on the CPU; it has good rotation and scaling invariance compared to simple corner features such as Harris corners. Moreover, the ORB provides a descriptor that enables us to perform loopback detection and relocation during a wide range of motions.
+The loopback detection of \item ORB is its highlight. The excellent loopback detection algorithm ensures that the ORB-SLAM effectively prevents cumulative errors and can be quickly retrieved after loss. Many existing SLAM systems are not perfect. To this end, ORB-SLAM must load a large ORB dictionary before running \mbox{file}\footnote{The current open source version of ORB-SLAM uses a dictionary in text format, which can be accelerated after changing to a binary format dictionary. }.
+
+\item ORB-SLAM innovatively uses three threads to complete SLAM: Tracking thread for real-time tracking of feature points, Co-visibility Graph for local Bundle Adjustment (commonly known as \textbf{small image}), and global Pose Graph Loop detection and optimization thread (Essential Graph commonly known as \textbf{big picture}). Among them, the Tracking thread is responsible for extracting the ORB feature points for each new image, and comparing with the nearest key frame, calculating the position of the feature points and roughly estimating the camera pose. The small image thread solves a Bundle Adjustment problem, which includes feature points and camera poses in the local space. This thread is responsible for solving finer camera poses and feature point spatial locations. However, only the first two threads have only completed a better visual odometer. The third thread, which is the big picture thread, performs loopback detection on the global map and key frames to eliminate accumulated errors. Since there are too many map points in the global map, the optimization of this thread does not include map points, but only pose poses composed of camera poses.
+
+
+
+\hspace{2em} Following the dual-threaded structure of PTAM, ORB-SLAM's three-threaded structure achieved very good tracking and mapping effects, ensuring global consistency between the trajectory and the map. This three-threaded structure will also be recognized and adopted by subsequent researchers.
+\item ORB-SLAM has been optimized around feature points. For example, based on the feature extraction of OpenCV, the uniform distribution of feature points is guaranteed. In the optimization of pose, a method of loop optimization 4 times is used to obtain more correct matching, and a key frame selection strategy is more relaxed than PTAM. and many more. These minor improvements make the ORB-SLAM far more robust than other solutions: even for poorer scenarios, the poorly calibrated internal reference, the ORB-SLAM works smoothly.
+\end{enumerate}
