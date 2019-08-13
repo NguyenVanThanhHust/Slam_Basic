@@ -1,0 +1,3 @@
+/media/thanh/New Volume/ceres/CMakeFiles/edit_cache.dir
+/media/thanh/New Volume/ceres/CMakeFiles/rebuild_cache.dir
+/media/thanh/New Volume/ceres/CMakeFiles/helloworld.dir
