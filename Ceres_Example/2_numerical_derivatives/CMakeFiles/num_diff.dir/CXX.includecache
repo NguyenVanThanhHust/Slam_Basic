@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Ceres_Example/numerical_derivatives/num_diff.cpp
+iostream
+-
+ceres/ceres.h
+/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Ceres_Example/numerical_derivatives/ceres/ceres.h
+glog/logging.h
+/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Ceres_Example/numerical_derivatives/glog/logging.h
+
