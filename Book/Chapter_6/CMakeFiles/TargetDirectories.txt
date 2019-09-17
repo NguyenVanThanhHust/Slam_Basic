@@ -1,4 +1,0 @@
-/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/Chapter_6/CMakeFiles/rebuild_cache.dir
-/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/Chapter_6/CMakeFiles/edit_cache.dir
-/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/Chapter_6/CMakeFiles/gaussNewton.dir
-/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/Chapter_6/CMakeFiles/g2oCurveFitting.dir
