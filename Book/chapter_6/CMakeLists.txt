@@ -26,6 +26,12 @@ add_executable(gaussNewton gaussNewton.cpp)
 
 add_executable(g2oCurveFitting g2oCurveFitting.cpp)
 
+add_executable(ceresCurveFitting ceresCurveFitting.cpp)
+
+target_link_libraries(ceresCurveFitting 
+${OpenCV_LIBS}
+)
+
 target_link_libraries(gaussNewton 
 ${OpenCV_LIBS}
 )

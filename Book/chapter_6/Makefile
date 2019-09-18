@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named ceresCurveFitting
+
+# Build rule for target.
+ceresCurveFitting: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 ceresCurveFitting
+.PHONY : ceresCurveFitting
+
+# fast build rule for target.
+ceresCurveFitting/fast:
+	$(MAKE) -f CMakeFiles/ceresCurveFitting.dir/build.make CMakeFiles/ceresCurveFitting.dir/build
+.PHONY : ceresCurveFitting/fast
+
+#=============================================================================
 # Target rules for targets named gaussNewton
 
 # Build rule for target.
@@ -135,6 +148,33 @@ g2oCurveFitting: cmake_check_build_system
 g2oCurveFitting/fast:
 	$(MAKE) -f CMakeFiles/g2oCurveFitting.dir/build.make CMakeFiles/g2oCurveFitting.dir/build
 .PHONY : g2oCurveFitting/fast
+
+ceresCurveFitting.o: ceresCurveFitting.cpp.o
+
+.PHONY : ceresCurveFitting.o
+
+# target to build an object file
+ceresCurveFitting.cpp.o:
+	$(MAKE) -f CMakeFiles/ceresCurveFitting.dir/build.make CMakeFiles/ceresCurveFitting.dir/ceresCurveFitting.cpp.o
+.PHONY : ceresCurveFitting.cpp.o
+
+ceresCurveFitting.i: ceresCurveFitting.cpp.i
+
+.PHONY : ceresCurveFitting.i
+
+# target to preprocess a source file
+ceresCurveFitting.cpp.i:
+	$(MAKE) -f CMakeFiles/ceresCurveFitting.dir/build.make CMakeFiles/ceresCurveFitting.dir/ceresCurveFitting.cpp.i
+.PHONY : ceresCurveFitting.cpp.i
+
+ceresCurveFitting.s: ceresCurveFitting.cpp.s
+
+.PHONY : ceresCurveFitting.s
+
+# target to generate assembly for a file
+ceresCurveFitting.cpp.s:
+	$(MAKE) -f CMakeFiles/ceresCurveFitting.dir/build.make CMakeFiles/ceresCurveFitting.dir/ceresCurveFitting.cpp.s
+.PHONY : ceresCurveFitting.cpp.s
 
 g2oCurveFitting.o: g2oCurveFitting.cpp.o
 
@@ -198,8 +238,12 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... ceresCurveFitting"
 	@echo "... gaussNewton"
 	@echo "... g2oCurveFitting"
+	@echo "... ceresCurveFitting.o"
+	@echo "... ceresCurveFitting.i"
+	@echo "... ceresCurveFitting.s"
 	@echo "... g2oCurveFitting.o"
 	@echo "... g2oCurveFitting.i"
 	@echo "... g2oCurveFitting.s"

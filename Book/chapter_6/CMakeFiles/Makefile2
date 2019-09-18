@@ -53,12 +53,14 @@ CMAKE_BINARY_DIR = /media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Boo
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/ceresCurveFitting.dir/all
 all: CMakeFiles/gaussNewton.dir/all
 all: CMakeFiles/g2oCurveFitting.dir/all
 
 .PHONY : all
 
 # The main recursive "clean" target.
+clean: CMakeFiles/ceresCurveFitting.dir/clean
 clean: CMakeFiles/gaussNewton.dir/clean
 clean: CMakeFiles/g2oCurveFitting.dir/clean
 
@@ -70,13 +72,40 @@ preinstall:
 .PHONY : preinstall
 
 #=============================================================================
+# Target rules for target CMakeFiles/ceresCurveFitting.dir
+
+# All Build rule for target.
+CMakeFiles/ceresCurveFitting.dir/all:
+	$(MAKE) -f CMakeFiles/ceresCurveFitting.dir/build.make CMakeFiles/ceresCurveFitting.dir/depend
+	$(MAKE) -f CMakeFiles/ceresCurveFitting.dir/build.make CMakeFiles/ceresCurveFitting.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/chapter_6/CMakeFiles --progress-num=1,2 "Built target ceresCurveFitting"
+.PHONY : CMakeFiles/ceresCurveFitting.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/ceresCurveFitting.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/chapter_6/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ceresCurveFitting.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/chapter_6/CMakeFiles 0
+.PHONY : CMakeFiles/ceresCurveFitting.dir/rule
+
+# Convenience name for target.
+ceresCurveFitting: CMakeFiles/ceresCurveFitting.dir/rule
+
+.PHONY : ceresCurveFitting
+
+# clean rule for target.
+CMakeFiles/ceresCurveFitting.dir/clean:
+	$(MAKE) -f CMakeFiles/ceresCurveFitting.dir/build.make CMakeFiles/ceresCurveFitting.dir/clean
+.PHONY : CMakeFiles/ceresCurveFitting.dir/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/gaussNewton.dir
 
 # All Build rule for target.
 CMakeFiles/gaussNewton.dir/all:
 	$(MAKE) -f CMakeFiles/gaussNewton.dir/build.make CMakeFiles/gaussNewton.dir/depend
 	$(MAKE) -f CMakeFiles/gaussNewton.dir/build.make CMakeFiles/gaussNewton.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/chapter_6/CMakeFiles --progress-num=3,4 "Built target gaussNewton"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/chapter_6/CMakeFiles --progress-num=5,6 "Built target gaussNewton"
 .PHONY : CMakeFiles/gaussNewton.dir/all
 
 # Build rule for subdir invocation for target.
@@ -103,7 +132,7 @@ CMakeFiles/gaussNewton.dir/clean:
 CMakeFiles/g2oCurveFitting.dir/all:
 	$(MAKE) -f CMakeFiles/g2oCurveFitting.dir/build.make CMakeFiles/g2oCurveFitting.dir/depend
 	$(MAKE) -f CMakeFiles/g2oCurveFitting.dir/build.make CMakeFiles/g2oCurveFitting.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/chapter_6/CMakeFiles --progress-num=1,2 "Built target g2oCurveFitting"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/chapter_6/CMakeFiles --progress-num=3,4 "Built target g2oCurveFitting"
 .PHONY : CMakeFiles/g2oCurveFitting.dir/all
 
 # Build rule for subdir invocation for target.
