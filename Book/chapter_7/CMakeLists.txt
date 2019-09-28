@@ -16,6 +16,9 @@ include_directories(
         "/usr/include/eigen3/"
 )
 
+add_executable(pose_estimation_2d2d pose_estimation_2d2d.cpp)
+target_link_libraries(pose_estimation_2d2d ${OpenCV_LIBS})
+
 add_executable(orb_cv orb_cv.cpp)
 target_link_libraries(orb_cv ${OpenCV_LIBS}
 /home/thanhnv/Downloads/g2o/lib/libg2o_solver_eigen.so
