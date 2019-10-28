@@ -1,3 +1,3 @@
 # Slam_Basic
 
-This is where I write a book and pratice SLAM
+This is where I pratice SLAM
