@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/features2d/features2d.hpp>
@@ -10,14 +11,17 @@
 #include <g2o/core/block_solver.h>
 #include <g2o/core/solver.h>
 #include <g2o/core/optimization_algorithm_gauss_newton.h>
+#include <g2o/core/optimization_algorithm_levenberg.h>
 #include <g2o/solvers/dense/linear_solver_dense.h>
 #include <sophus/se3.hpp>
 #include <chrono>
+#include <memory>
+#include <utility>
 
 using namespace std;
 using namespace cv;
 
-// This is how can we estimate camera position with 3d-2d feature matching.
+// This is how can we estimate camera position with 3d-3d feature matching.
 
 // This is an example for bundle adjustment to refine the 3D coordiate from 2 pair of rgb-depth image
 
@@ -29,9 +33,8 @@ void find_feature_matches(
 	);
 
 void pose_estimation_3d3d(
-	std::vector<KeyPoint> keypoints_1,
-	std::vector<KeyPoint> keypoints_2,
-	std::vector<DMatch> matches,
+	std::vector<Point3f> keypoints_1,
+	std::vector<Point3f> keypoints_2,
 	Mat &R, Mat &t
 	);
 
@@ -39,8 +42,8 @@ void pose_estimation_3d3d(
 Point2d pixel2cam(const Point2d &p, const Mat &K);
 
 void bundleAdjustment(
-	const std::vector<Point3f> &pts_1;
-	const std::vector<Point3f> &pts_2;
+	const std::vector<Point3f> &pts_1,
+	const std::vector<Point3f> &pts_2,
 	Mat &R, Mat &t
 	);
 
@@ -115,61 +118,51 @@ int main(int argc, char **argv)
 	// Create 3d Points
 	// depth map is 16-bit unsigned number, single channel image
 	Mat depth_1 = imread(argv[3], CV_LOAD_IMAGE_UNCHANGED);
+	Mat depth_2 = imread(argv[4], CV_LOAD_IMAGE_UNCHANGED);
 	Mat K = (Mat_<double>(3, 3) << 520.9, 0, 325.1, 0, 521.0, 249.7, 0, 0, 1);
-	std::vector<Point3f> pts_3d;
-	std::vector<Point2f> pts_2d;
+	std::vector<Point3f> pts_1, pts_2;
+
 	for (DMatch m:matches)
 	{
 		/* code */
-		ushort d = d1.ptr<unsigned short>(int(keypoints_1[m.queryIdx].pt.y))[int(keypoints_1[m.queryIdx].pt.x)];
-		if (d == 0)
+		ushort d1 = depth_1.ptr<unsigned short>(int(keypoints_1[m.queryIdx].pt.y))[int(keypoints_1[m.queryIdx].pt.x)];
+		ushort d2 = depth_2.ptr<unsigned short>(int(keypoints_2[m.trainIdx].pt.y))[int(keypoints_1[m.queryIdx].pt.x)];
+		if (d1 == 0 || d2 == 0) // bad depth
 		{
 			continue;
 		}
-		float dd = d/5000;
-		Point2d = pixel2cam(keypoints_1[m.queryIdx].pt, K);
-		pts_3d.push_back(Point3f(p1.x * dd, p1.y *dd, dd));
-		pts_2d.push_back(keypoints_2[m.trainIdx].pt);
+		Point2d p1 = pixel2cam(keypoints_1[m.queryIdx].pt, K);
+		Point2d p2 = pixel2cam(keypoints_2[m.queryIdx].pt, K);
+
+		float dd1 = float(d1)/5000.0;
+		float dd2 = float(d2)/5000.0;
+
+		pts_1.push_back(Point3f(p1.x * dd1, p1.y *dd1, dd1));
+		pts_2.push_back(Point3f(p2.x * dd2, p2.y *dd2, dd2));
 	}
 
-	cout<<"3d-2d pairs: "<< pts_3d.size()<<endl;
-  	chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
-  	Mat r, t;
-  	// call Open CV PnP solution, using Efficient Perspective-n-Point Camera Pose Estimation
-  	solvePnP(pts_3d, pts_2d, K, Mat(), r,, t, false, CV_EPNP);
-  	// Convert to rotation matrix using Rodigues formula
-  	cv::Rodrigues(r, R);
-  	chrono::steady_clock::time_point t2 = chrono::steady_clock::now();
-	chrono::duration<double> time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-	cout << "solve pnp in opencv cost time: " << time_used.count() << " seconds." << endl;
+	cout<<"3d-3d pairs: "<< pts_1.size()<<endl;
+  	Mat R, t;
+  	pose_estimation_3d3d(pts_1, pts_2, R, t);
 	
-	cout<<"R = "<<endl<<R<<endl;
-	cout<<"t = "<<endl<<t<<endl;
+	cout<<"ICP via SVD results: "<<endl;
+	cout<<"R = "<<R<<endl;
+	cout<<"t = "<<t<<endl;
+	cout<<"R inverse = "<<R.t()<<endl;
+	cout<<"t inverse = "<<t.t()<<endl;
 
-	vEigenVector3d pts_3d_eigen;
-	vEigenVector2d pts_2d_eigen;
+	cout<<"calling bundle adjustment"<<endl;
+	bundleAdjustment(pts_1, pts_2, R, t);
 
-	for (int i = 0; i < pts_3d.size(); ++i)
-	{
-		pts_2d_eigen.push_back(Eigen::Vector3d(pts_3d[i].x, pts_3d[i].y, pts_3d[i].z));
-		pts_2d_eigen.push_back(Eigen::Vector3d(pts_2d[i].x, pts_2d[i].y));
+	// verify p1 = R * p2 + t
+	for (int i = 0; i < 5; i++) {
+		cout << "p1 = " << pts_1[i] << endl;
+		cout << "p2 = " << pts_2[i] << endl;
+		cout << "(R*p2+t) = " <<
+			R * (Mat_<double>(3, 1) << pts_2[i].x, pts_2[i].y, pts_2[i].z) + t
+			<< endl;
+		cout << endl;
 	}
-  	cout << "calling bundle adjustment by gauss newton" << endl;
-  	Sophus::SE3d pose_gn;
-  	t1 = chrono::steady_clock::now();
-  	bundleAdjustmentGaussNewton(pts_3d_eigen, pts_2d_eigen, K, pose_gn);
-  	t2 = chrono::steady_clock::now();
-  	time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-  	cout << "solve pnp by gauss newton cost time: " << time_used.count() << " seconds." << endl;
-
- 	cout << "calling bundle adjustment by g2o" << endl;
- 	Sophus::SE3d pose_g2o;
-  	t1 = chrono::steady_clock::now();
-  	bundleAdjustmentG2O(pts_3d_eigen, pts_2d_eigen, K, pose_g2o);
-
-	t2 = chrono::steady_clock::now();
-	time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
-	cout << "solve pnp by g2o cost time: " << time_used.count() << " seconds." << endl;
 	return 0;
 }
 
@@ -238,12 +231,12 @@ void pose_estimation_3d3d(const std::vector<Point3f> &pts_1,
 						  const std::vector<Point3f> &pts_2,
 						  Mat &R, Mat &t )
 {
-	Point3f p1, p2;
-	int N = pts1.size();
+	Point3f p1, p2; // center of mass
+	int N = pts_1.size();
 	for (int i = 0; i < N; ++i)
 	{
-		p1 += pts1[i];
-		p2 += pts2[i];
+		p1 += pts_1[i];
+		p2 += pts_2[i];
 	}
 
 	p1 = Point3f(Vec3f(p1) / N);
@@ -253,6 +246,90 @@ void pose_estimation_3d3d(const std::vector<Point3f> &pts_1,
 	std::vector<Point3f> q1(N), q2(N);
 	for (int i = 0; i < N; ++i)
 	{
-		/* code */
+		q1[i] = pts_1[i] - p1;
+		q2[i] = pts_2[i] - p2;
 	}
+
+	// Compute q1*q2^T
+	Eigen::Matrix3d W = Eigen::Matrix3d::Zero();
+	for (int i = 0; i < N; i++)
+	{
+		W += Eigen::Vector3d(q1[i].x, q1[i].y, q1[i].z) * Eigen::Vector3d(q2[i].x, q2[i].y, q2[i].z).transpose();
+	}
+	cout<<" W = "<<W<<endl;
+
+	// SVD on W
+	Eigen::JacobiSVD<Eigen::Matrix3d> svd(W, Eigen::ComputeFullU | Eigen::ComputeFullV);
+	Eigen::Matrix3d U = svd.matrixU();
+	Eigen::Matrix3d V = svd.matrixV();
+
+	cout << "U=" << U << endl;
+	cout << "V=" << V << endl;
+
+	Eigen::Matrix3d R_ = U * (V.transpose());
+	if (R_.determinant() < 0) {
+		R_ = -R_;
+	}
+	Eigen::Vector3d t_ = Eigen::Vector3d(p1.x, p1.y, p1.z) - R_ * Eigen::Vector3d(p2.x, p2.y, p2.z);
+
+	// convert to cv::Mat
+	R = (Mat_<double>(3, 3) <<
+		R_(0, 0), R_(0, 1), R_(0, 2),
+		R_(1, 0), R_(1, 1), R_(1, 2),
+		R_(2, 0), R_(2, 1), R_(2, 2)
+	);
+	t = (Mat_<double>(3, 1) << t_(0, 0), t_(1, 0), t_(2, 0));
+}
+
+void bundleAdjustment(
+  const vector<Point3f> &pts1,
+  const vector<Point3f> &pts2,
+  Mat &R, Mat &t) 
+{
+	// Optimize the construction graph, set g2o first
+	typedef g2o::BlockSolverX BlockSolverType;
+	typedef g2o::LinearSolverDense<BlockSolverType::PoseMatrixType> LinearSolverType; // linear solver type
+	// Gradient descent method, you can choose from GN, LM, DogLeg
+	auto solver = new g2o::OptimizationAlgorithmLevenberg(
+		g2o::make_unique<BlockSolverType>(g2o::make_unique<LinearSolverType>()));
+	g2o::SparseOptimizer optimizer;     // graph model
+	optimizer.setAlgorithm(solver);   // set the solver
+	optimizer.setVerbose(true);       // turn on debug output
+
+	// vertex
+	VertexPose *pose = new VertexPose(); // camera pose
+	pose->setId(0);
+	pose->setEstimate(Sophus::SE3d());
+	optimizer.addVertex(pose);
+
+	// edges
+	for (size_t i = 0; i < pts1.size(); i++) {
+		EdgeProjectXYZRGBDPoseOnly *edge = new EdgeProjectXYZRGBDPoseOnly(
+		Eigen::Vector3d(pts2[i].x, pts2[i].y, pts2[i].z));
+		edge->setVertex(0, pose);
+		edge->setMeasurement(Eigen::Vector3d(
+		pts1[i].x, pts1[i].y, pts1[i].z));
+		edge->setInformation(Eigen::Matrix3d::Identity());
+		optimizer.addEdge(edge);
+	}
+
+	chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
+	optimizer.initializeOptimization();
+	optimizer.optimize(10);
+	chrono::steady_clock::time_point t2 = chrono::steady_clock::now();
+	chrono::duration<double> time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+	cout << "optimization costs time: " << time_used.count() << " seconds." << endl;
+
+	cout << endl << "after optimization:" << endl;
+	cout << "T=\n" << pose->estimate().matrix() << endl;
+
+	// convert to cv::Mat
+	Eigen::Matrix3d R_ = pose->estimate().rotationMatrix();
+	Eigen::Vector3d t_ = pose->estimate().translation();
+	R = (Mat_<double>(3, 3) <<
+		R_(0, 0), R_(0, 1), R_(0, 2),
+		R_(1, 0), R_(1, 1), R_(1, 2),
+		R_(2, 0), R_(2, 1), R_(2, 2)
+	);
+	t = (Mat_<double>(3, 1) << t_(0, 0), t_(1, 0), t_(2, 0));
 }

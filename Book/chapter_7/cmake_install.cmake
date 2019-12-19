@@ -1,4 +1,4 @@
-# Install script for directory: /media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/chapter_7
+# Install script for directory: /media/thanhnv/01D4AD520429D180/Projects/Slam_Basic/Book/chapter_7
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/chapter_7/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/media/thanhnv/01D4AD520429D180/Projects/Slam_Basic/Book/chapter_7/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
