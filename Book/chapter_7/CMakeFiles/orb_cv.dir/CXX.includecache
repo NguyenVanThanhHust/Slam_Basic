@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Book/chapter_7/orb_cv.cpp
+/media/thanh/New Volume/Slam_Basic/Book/chapter_7/orb_cv.cpp
 iostream
 -
 opencv2/core/core.hpp

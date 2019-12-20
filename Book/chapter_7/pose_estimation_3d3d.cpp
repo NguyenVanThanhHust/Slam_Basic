@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/features2d/features2d.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -32,11 +33,9 @@ void find_feature_matches(
 	std::vector<DMatch> &matches
 	);
 
-void pose_estimation_3d3d(
-	std::vector<Point3f> keypoints_1,
-	std::vector<Point3f> keypoints_2,
-	Mat &R, Mat &t
-	);
+void pose_estimation_3d3d(std::vector<Point3f> &pts_1, 
+						  std::vector<Point3f> &pts_2,
+						  Mat &R, Mat &t );
 
 // Pixel coordiate to camera normalized ordinate
 Point2d pixel2cam(const Point2d &p, const Mat &K);
@@ -120,7 +119,7 @@ int main(int argc, char **argv)
 	Mat depth_1 = imread(argv[3], CV_LOAD_IMAGE_UNCHANGED);
 	Mat depth_2 = imread(argv[4], CV_LOAD_IMAGE_UNCHANGED);
 	Mat K = (Mat_<double>(3, 3) << 520.9, 0, 325.1, 0, 521.0, 249.7, 0, 0, 1);
-	std::vector<Point3f> pts_1, pts_2;
+	std::vector<cv::Point3f> pts_1, pts_2;	
 
 	for (DMatch m:matches)
 	{
@@ -141,28 +140,6 @@ int main(int argc, char **argv)
 		pts_2.push_back(Point3f(p2.x * dd2, p2.y *dd2, dd2));
 	}
 
-	cout<<"3d-3d pairs: "<< pts_1.size()<<endl;
-  	Mat R, t;
-  	pose_estimation_3d3d(pts_1, pts_2, R, t);
-	
-	cout<<"ICP via SVD results: "<<endl;
-	cout<<"R = "<<R<<endl;
-	cout<<"t = "<<t<<endl;
-	cout<<"R inverse = "<<R.t()<<endl;
-	cout<<"t inverse = "<<t.t()<<endl;
-
-	cout<<"calling bundle adjustment"<<endl;
-	bundleAdjustment(pts_1, pts_2, R, t);
-
-	// verify p1 = R * p2 + t
-	for (int i = 0; i < 5; i++) {
-		cout << "p1 = " << pts_1[i] << endl;
-		cout << "p2 = " << pts_2[i] << endl;
-		cout << "(R*p2+t) = " <<
-			R * (Mat_<double>(3, 1) << pts_2[i].x, pts_2[i].y, pts_2[i].z) + t
-			<< endl;
-		cout << endl;
-	}
 	return 0;
 }
 
@@ -227,8 +204,10 @@ Point2d pixel2cam(const Point2d &p, const Mat &K)
 	return point_at_cam;
 }
 
-void pose_estimation_3d3d(const std::vector<Point3f> &pts_1, 
-						  const std::vector<Point3f> &pts_2,
+
+
+void pose_estimation_3d3d(std::vector<Point3f> &pts_1, 
+						  std::vector<Point3f> &pts_2,
 						  Mat &R, Mat &t )
 {
 	Point3f p1, p2; // center of mass
