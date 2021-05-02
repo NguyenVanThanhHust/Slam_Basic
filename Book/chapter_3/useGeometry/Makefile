@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/media/thanh/New Volume/Project/Slam_Basic/chapter_3/useGeometry"
+CMAKE_SOURCE_DIR = /home/ubuntu/projects/Slam_Basic/Book/chapter_3/useGeometry
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/media/thanh/New Volume/Project/Slam_Basic/chapter_3/useGeometry"
+CMAKE_BINARY_DIR = /home/ubuntu/projects/Slam_Basic/Book/chapter_3/useGeometry
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/media/thanh/New Volume/Project/Slam_Basic/chapter_3/useGeometry/CMakeFiles" "/media/thanh/New Volume/Project/Slam_Basic/chapter_3/useGeometry/CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/projects/Slam_Basic/Book/chapter_3/useGeometry/CMakeFiles /home/ubuntu/projects/Slam_Basic/Book/chapter_3/useGeometry/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/media/thanh/New Volume/Project/Slam_Basic/chapter_3/useGeometry/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/projects/Slam_Basic/Book/chapter_3/useGeometry/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
