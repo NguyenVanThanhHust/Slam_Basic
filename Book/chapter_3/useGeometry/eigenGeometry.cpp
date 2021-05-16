@@ -29,7 +29,7 @@ int main()
 	
 	//Euler angle: The rotation matrix can be directly converted into Euler angles
 	Vector3d euler_angles = rotation_matrix.eulerAngles(2,1,0);
-	//// ZYX order, ie roll pitch yaw order
+	//// ZYX order, ie yaw pitch roll order
 	cout<<"Yaw pitch roll = "<<euler_angles.transpose()<<endl;
 	
 	// Euclidean transformation matrix using Eigen::Isometry
