@@ -1,3 +1,0 @@
-/media/thanh/New Volume/Project/Slam_Basic/chapter_3/useEigen/CMakeFiles/edit_cache.dir
-/media/thanh/New Volume/Project/Slam_Basic/chapter_3/useEigen/CMakeFiles/rebuild_cache.dir
-/media/thanh/New Volume/Project/Slam_Basic/chapter_3/useEigen/CMakeFiles/eigenMatrix.dir
