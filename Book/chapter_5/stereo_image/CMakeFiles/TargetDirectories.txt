@@ -1,3 +1,0 @@
-/media/thanh/New Volume/Project/Slam_Basic/chapter_5/stereo_image/CMakeFiles/edit_cache.dir
-/media/thanh/New Volume/Project/Slam_Basic/chapter_5/stereo_image/CMakeFiles/rebuild_cache.dir
-/media/thanh/New Volume/Project/Slam_Basic/chapter_5/stereo_image/CMakeFiles/stereoVision.dir
