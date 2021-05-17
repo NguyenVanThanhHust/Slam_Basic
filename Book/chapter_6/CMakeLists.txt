@@ -5,7 +5,10 @@ set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS "-std=c++14 -O3")
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-set(CMAKE_PREFIX_PATH "/home/thanhnv/Downloads/g2o/build")
+set(Ceres_DIR "/home/thanhnv/Downloads/ceres-solver/")
+
+set(CMAKE_PREFIX_PATH "/home/thanhnv/Downloads/g2o/build" )
+
 
 # OpenCV
 find_package(OpenCV REQUIRED)
