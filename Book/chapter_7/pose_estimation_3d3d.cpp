@@ -103,8 +103,8 @@ int main(int argc, char **argv)
 		cout<<"usage: pose_estimation_3d3d img_1 img_2 depth_img1 depth_img2"<<endl;
 		return 1;
 	}
-	Mat img_1 = imread(argv[1], CV_LOAD_IMAGE_COLOR);
-	Mat img_2 = imread(argv[2], CV_LOAD_IMAGE_COLOR);
+	Mat img_1 = imread(argv[1], cv::IMREAD_COLOR);
+	Mat img_2 = imread(argv[2], cv::IMREAD_COLOR);
 
 	// Check if image is not none
 	assert(img_1.data && img_2.data && "Can not load images");
@@ -116,8 +116,8 @@ int main(int argc, char **argv)
 
 	// Create 3d Points
 	// depth map is 16-bit unsigned number, single channel image
-	Mat depth_1 = imread(argv[3], CV_LOAD_IMAGE_UNCHANGED);
-	Mat depth_2 = imread(argv[4], CV_LOAD_IMAGE_UNCHANGED);
+	Mat depth_1 = imread(argv[3], cv::IMREAD_UNCHANGED);
+	Mat depth_2 = imread(argv[4], cv::IMREAD_UNCHANGED);
 	Mat K = (Mat_<double>(3, 3) << 520.9, 0, 325.1, 0, 521.0, 249.7, 0, 0, 1);
 	std::vector<cv::Point3f> pts_1, pts_2;	
 

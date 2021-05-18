@@ -33,8 +33,8 @@ int main(int argc, char **argv)
 		cout<<"usage: pose_estimation_2d2d img_1 img_2"<<endl;
 		return 1;
 	}
-	Mat img_1 = imread(argv[1], CV_LOAD_IMAGE_COLOR);
-	Mat img_2 = imread(argv[2], CV_LOAD_IMAGE_COLOR);
+	Mat img_1 = imread(argv[1], cv::IMREAD_COLOR);
+	Mat img_2 = imread(argv[2], cv::IMREAD_COLOR);
 
 	// Check if image is not none
 	assert(img_1.data && img_2.data && "Can not load images");
@@ -143,7 +143,7 @@ void pose_estimation_2d2d(
 
 	//-- Calculate the base matrix
 	Mat fundamental_matrix;
-	fundamental_matrix = findFundamentalMat(points1, points2, CV_FM_8POINT);
+	fundamental_matrix = findFundamentalMat(points1, points2, cv::FM_8POINT);
     cout << "fundamental_matrix is " << endl << fundamental_matrix << endl;
 
     // Calculate essence matrix
