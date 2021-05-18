@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 2.8)
 project(ch6)
 
 set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_CXX_FLAGS "-std=c++14 -O3")
+set(CMAKE_CXX_FLAGS "-std=c++14 -O3 -pthread")
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-set(Ceres_DIR "/home/thanhnv/Downloads/ceres-solver/")
+set(Ceres_DIR "/home/thanhnv/Downloads/ceres-solver-2.0.0/")
 
 set(CMAKE_PREFIX_PATH "/home/thanhnv/Downloads/g2o/build" )
 
@@ -18,21 +18,18 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 find_package(Ceres REQUIRED)
 include_directories(${CERES_INCLUDE_DIRS})
 
-# g2o
-# find_package(G2O REQUIRED)
-include_directories(${G2O_INCLUDE_DIRS})
-
 # Eigen
 include_directories("/usr/include/eigen3")
 
 add_executable(gaussNewton gaussNewton.cpp)
 
-add_executable(g2oCurveFitting g2oCurveFitting.cpp)
-
 add_executable(ceresCurveFitting ceresCurveFitting.cpp)
+
+add_executable(g2oCurveFitting g2oCurveFitting.cpp)
 
 target_link_libraries(ceresCurveFitting 
 ${OpenCV_LIBS}
+${CERES_LIBRARIES}
 )
 
 target_link_libraries(gaussNewton 
@@ -72,4 +69,3 @@ ${OpenCV_LIBS}
 /home/thanhnv/Downloads/g2o/lib/libg2o_types_slam3d.so
 /home/thanhnv/Downloads/g2o/lib/libg2o_types_slam3d_addons.so
 )
-
