@@ -1,1 +1,0 @@
-/usr/bin/c++      CMakeFiles/useSophus.dir/useSophus.cpp.o  -o useSophus -rdynamic 
