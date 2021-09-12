@@ -17,6 +17,3 @@ include_directories("/usr/include/eigen3")
 find_package(Pangolin REQUIRED)
 include_directories(${Pangolin_INCLUDE_DIRS})
 target_link_libraries(stereoVision ${Pangolin_LIBRARIES})
-
-
-
