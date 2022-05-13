@@ -1,4 +1,0 @@
-/media/thanh/New Volume/Project/Slam_Basic/chapter_5/imageBasic/CMakeFiles/edit_cache.dir
-/media/thanh/New Volume/Project/Slam_Basic/chapter_5/imageBasic/CMakeFiles/undistortImage.dir
-/media/thanh/New Volume/Project/Slam_Basic/chapter_5/imageBasic/CMakeFiles/rebuild_cache.dir
-/media/thanh/New Volume/Project/Slam_Basic/chapter_5/imageBasic/CMakeFiles/imageBasics.dir

@@ -1,3 +1,0 @@
-/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Ceres_Example/numerical_derivatives/CMakeFiles/rebuild_cache.dir
-/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Ceres_Example/numerical_derivatives/CMakeFiles/num_diff.dir
-/media/thanhnv/01D4AD520429D180/UbuntuProjects/Slam_Basic/Ceres_Example/numerical_derivatives/CMakeFiles/edit_cache.dir
