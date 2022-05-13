@@ -1,10 +1,13 @@
+Build docker image 
+```
+docker build -t slam_image -f Dockerfile .
+```
 
-docker build -t slam_image .
+Build docker container
+```
+docker run -it --rm --name slam_env --gpus=all --user="$(id -u):$(id -g)" --shm-size 8G -p 8899:8899 -p 5001:5001 -p 12345:12345 --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" --volume="$PWD:/workspace/" slam_image:latest /bin/bash
+```
 
-# port 8899 for jupyter
-# port 5001 for pangolin
-# port 12345 for git
-docker run -it --name slam_env --gpus=all --shm-size 8G -p 8899:8899 -p 5001:5001 -p 12345:12345 --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" slam_image /bin/bash
 ```
 docker start slam_env
 ```
