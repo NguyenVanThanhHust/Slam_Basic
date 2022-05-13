@@ -1,3 +1,0 @@
-/media/thanh/New Volume/Project/Slam_Basic/chapter_3/visualizeGeometry/CMakeFiles/rebuild_cache.dir
-/media/thanh/New Volume/Project/Slam_Basic/chapter_3/visualizeGeometry/CMakeFiles/edit_cache.dir
-/media/thanh/New Volume/Project/Slam_Basic/chapter_3/visualizeGeometry/CMakeFiles/visualizeGeometry.dir
