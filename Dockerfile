@@ -26,6 +26,8 @@ RUN apt-get update && apt-get install -y \
     dbus-x11 \
     software-properties-common \
     gdb valgrind \
+    libeigen3-dev \
+    libboost-all-dev \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /git_installed_lib/
@@ -43,7 +45,6 @@ WORKDIR /git_installed_lib//opencv/build/
 RUN cmake .. -D BUILD_opencv_java=OFF -D BUILD_opencv_python=0  -D BUILD_opencv_python2=0 -D BUILD_opencv_python3=0 -DOPENCV_EXTRA_MODULES_PATH= ../../opencv_contrib/modules/ -D OPENCV_ENABLE_NONFREE=1
 RUN make -j3 && make install
 
-RUN apt-get update && apt-get install -y libeigen3-dev libboost-all-dev
 
 WORKDIR /git_installed_lib/
 # Clone Pangolin along with it's submodules
