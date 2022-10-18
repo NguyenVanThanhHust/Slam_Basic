@@ -48,14 +48,6 @@ RUN make -j3 && make install
 
 WORKDIR /git_installed_lib/
 # Clone Pangolin along with it's submodules
-RUN git clone --recursive https://github.com/stevenlovegrove/Pangolin.git
-
-WORKDIR /git_installed_lib/Pangolin/
-RUN ./scripts/install_prerequisites.sh --dry-run recommended
-WORKDIR /git_installed_lib/Pangolin/build/
-RUN apt-get update && apt-get install -y libgl1-mesa-dev libglew-dev
-RUN cmake .. && make -j3 && make install 
-
 WORKDIR /git_installed_lib/
 RUN git clone --recursive https://github.com/strasdat/Sophus.git
 WORKDIR /git_installed_lib/Sophus
@@ -64,6 +56,16 @@ WORKDIR /git_installed_lib/Sophus/build/
 RUN cmake .. && make -j3 && make install
 
 RUN apt-get update && apt-get install -y libsuitesparse-dev
+
+
+RUN git clone --recursive https://github.com/stevenlovegrove/Pangolin.git
+
+WORKDIR /git_installed_lib/Pangolin/
+RUN ./scripts/install_prerequisites.sh --dry-run recommended
+WORKDIR /git_installed_lib/Pangolin/build/
+RUN apt-get update && apt-get install -y libgl1-mesa-dev libglew-dev
+RUN cmake .. && make -j3 && make install 
+
 
 WORKDIR /workspace/
 
