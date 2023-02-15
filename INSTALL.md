@@ -5,7 +5,7 @@ docker build -t slam_image -f Dockerfile .
 
 Build docker container
 ```
-docker run -it --rm --name slam_env --gpus=all --user="$(id -u):$(id -g)" --shm-size 8G -p 8899:8899 -p 5001:5001 -p 12345:12345 --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" --volume="$PWD:/workspace/" slam_image:latest /bin/bash
+docker run -it --rm --name slam_env --gpus=all --user="$(id -u):$(id -g)" --shm-size 8G --network host --env="DISPLAY" --env="QT_X11_NO_MITSHM=1" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" --volume="$PWD:/workspace/" slam_image:latest /bin/bash
 ```
 
 ```
