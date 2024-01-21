@@ -136,6 +136,8 @@ RUN apt-get update && apt-get install -y libdc1394-dev libraw1394-dev libopenni-
 WORKDIR /opt/Pangolin/build/
 RUN cmake .. && make -j3 && make install 
 
+WORKDIR /workspace/
+
 ARG USERNAME=thanhnv
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
