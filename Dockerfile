@@ -1,6 +1,6 @@
-FROM nvidia/cuda:11.6.1-cudnn8-devel-ubuntu20.04
+FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
 ARG DEBIAN_FRONTEND=noninteractive
-ARG CUDA_VERSION=11.6
+ARG CUDA_VERSION=11.8.0
 
 # Install some basic utilities
 RUN apt-get update && apt-get install -y \
@@ -29,12 +29,16 @@ RUN apt-get update && apt-get install -y \
     libboost-all-dev \
  && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /opt/
+RUN apt-get update && apt-get install -y libglfw3-dev libgl-dev libglu-dev
 
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3.8 get-pip.py 
+# Install python3.10
+WORKDIR /opt/
+RUN apt update && add-apt-repository ppa:deadsnakes/ppa -y
+RUN apt install -y python3.10-full
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3.10 get-pip.py 
 
 WORKDIR /opt/
-RUN python3.8 -m pip install cmake
+RUN python3.10 -m pip install cmake
 
 RUN git clone https://github.com/opencv/opencv.git -b 4.5.2
 RUN git clone https://github.com/opencv/opencv_contrib.git -b 4.5.2
@@ -73,7 +77,6 @@ RUN cmake .. -D BUILD_opencv_java=OFF \
       -D BUILD_opencv_line_descriptor=ON \
       -D BUILD_opencv_optflow=ON \
       -D BUILD_opencv_phase_unwrapping=ON \
-      -D BUILD_opencv_python3=OFF \
       -D BUILD_opencv_python_bindings_generator=OFF \
       -D BUILD_opencv_reg=ON \
       -D BUILD_opencv_rgbd=ON \
@@ -116,34 +119,40 @@ RUN cmake .. && make -j3 && make install
 
 RUN apt-get update && apt-get install -y libsuitesparse-dev
 
+
 WORKDIR /opt/
-RUN git clone --recursive https://github.com/stevenlovegrove/Pangolin.git
-WORKDIR /opt/Pangolin/
-RUN ./scripts/install_prerequisites.sh --dry-run all
-WORKDIR /opt/Pangolin/build/
+RUN git clone --recursive https://github.com/RainerKuemmerle/g2o.git 
+WORKDIR /opt/g2o/
+WORKDIR /opt/g2o/build/
 RUN apt-get update && apt-get install -y libgl1-mesa-dev libglew-dev
 RUN cmake .. && make -j3 && make install 
 
-WORKDIR /workspace/
+WORKDIR /opt/
+RUN git clone --recursive https://github.com/stevenlovegrove/Pangolin.git
+WORKDIR /opt/Pangolin/
+RUN apt-get update && apt-get install -y libwayland-dev libxkbcommon-dev wayland-protocols libegl1-mesa-dev
+RUN apt-get update && apt-get install -y libavcodec-dev libavutil-dev libavformat-dev libswscale-dev libavdevice-dev
+RUN apt-get update && apt-get install -y libdc1394-dev libraw1394-dev libopenni-dev
+WORKDIR /opt/Pangolin/build/
+RUN cmake .. && make -j3 && make install 
 
+ARG USERNAME=thanhnv
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
 
-# ARG USERNAME=thanhnv
-# ARG USER_UID=1000
-# ARG USER_GID=$USER_UID
+# Create the user
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    #
+    # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
+    && apt-get update \
+    && apt-get install -y sudo \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
 
-# # Create the user
-# RUN groupadd --gid $USER_GID $USERNAME \
-#     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-#     #
-#     # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
-#     && apt-get update \
-#     && apt-get install -y sudo \
-#     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-#     && chmod 0440 /etc/sudoers.d/$USERNAME
+# ********************************************************
+# * Anything else you want to do like clean up goes here *
+# ********************************************************
 
-# # ********************************************************
-# # * Anything else you want to do like clean up goes here *
-# # ********************************************************
-
-# # [Optional] Set the default user. Omit if you want to keep the default as root.
-# USER $USERNAME
+# [Optional] Set the default user. Omit if you want to keep the default as root.
+USER $USERNAME
